@@ -5,16 +5,17 @@ interface ProfileCardProps {
     name: string;
     title: string;
     description: string;
+    onMessageClick: () => void;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ name, title, description }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ name, title, description, onMessageClick }) => {
     return (
         <View style={styles.profileCard}>
             <View style={styles.profilePicture} />
             <Text style={styles.profileName}>{name}</Text>
             <Text style={styles.profileTitle}>{title}</Text>
             <Text style={styles.profileDescription}>{description}</Text>
-            <TouchableOpacity style={styles.messageButton}>
+            <TouchableOpacity style={styles.messageButton} onPress={onMessageClick}>
                 <Text style={styles.messageButtonText}>Message</Text>
             </TouchableOpacity>
         </View>
