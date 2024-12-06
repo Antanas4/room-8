@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
 import BackButton from '../components/BackButton';
 
 export default function LoginScreen() {
     const [phone_number, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
+    const router = useRouter();
+
+    const handleLogin = () => {
+        router.push('/main');
+    };
 
     return (
         <View style={styles.container}>
+            {}
             <BackButton />
+
             <Text style={styles.title}>ROOM8</Text>
 
             <View style={styles.inputContainer}>
@@ -32,7 +40,7 @@ export default function LoginScreen() {
                 />
             </View>
 
-            <TouchableOpacity style={styles.loginButton}>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                 <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
         </View>
