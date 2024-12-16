@@ -2,18 +2,12 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/room8
     username: postgres
-    password: admin
+    password:
     driver-class-name: org.postgresql.Driver
   jpa:
+    hibernate:
+      ddl-auto: update
     show-sql: true
-    open-in-view: false
     properties:
       hibernate:
-        ddl-auto: update
-  security:
-    user:
-      name: admin
-      password: admin
-
-server:
-  port: 8080
+        dialect: org.hibernate.dialect.PostgreSQLDialect

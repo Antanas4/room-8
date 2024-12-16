@@ -19,7 +19,7 @@ const SearchBar = ({ searchText, setSearchText, handleSearchClick, toggleFilter 
                 <Ionicons name="filter" size={24} color="#48AABA" />
             </TouchableOpacity>
         </View>
-    );
+    );``
 };
 
 const styles = StyleSheet.create({
