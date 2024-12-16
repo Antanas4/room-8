@@ -2,19 +2,28 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import BackButton from '../components/BackButton';
+import axios from 'axios';
 
 export default function LoginScreen() {
-    const [phone_number, setPhoneNumber] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
 
-    const handleLogin = () => {
-        router.push('/main');
+    const handleLogin = async () => {
+        try {
+            await axios.post('http://localhost:8080/api/users/login', {
+                username,
+                password,
+            });
+
+            router.push('/main');
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     return (
         <View style={styles.container}>
-            {}
             <BackButton />
 
             <Text style={styles.title}>ROOM8</Text>
@@ -22,10 +31,10 @@ export default function LoginScreen() {
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Phone Number"
+                    placeholder="Username"
                     placeholderTextColor="#A0A3BD"
-                    value={phone_number}
-                    onChangeText={setPhoneNumber}
+                    value={username}
+                    onChangeText={setUsername}
                 />
             </View>
 

@@ -2,6 +2,7 @@ package com.room8.backend.services;
 
 import com.room8.backend.dtos.LoginUserRequestDto;
 import com.room8.backend.dtos.SaveUserRequestDto;
+import com.room8.backend.dtos.UserResponseDto;
 import com.room8.backend.entities.User;
 import com.room8.backend.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,8 +24,9 @@ import java.util.Collections;
 @AllArgsConstructor
 public class UserService {
 
-    private UserRepository userRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SessionService sessionService;
 
     public void saveUser(SaveUserRequestDto saveUserRequestDto) {
         if (userRepository.existsByUsername(saveUserRequestDto.getUsername())) {
@@ -77,6 +79,20 @@ public class UserService {
     public void logoutUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, authentication);
+    }
+
+    public UserResponseDto getUser(){
+        var user = sessionService.getUserFromSessionId()
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return UserResponseDto.builder()
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .dateOfBirth(user.getDateOfBirth())
+                .phoneNumber(user.getPhoneNumber())
+                .gender(user.getGender())
+                .build();
     }
 
 }

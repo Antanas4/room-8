@@ -1,7 +1,6 @@
 package com.room8.backend.dtos;
 
 import com.room8.backend.entities.Gender;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -9,7 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -26,10 +26,6 @@ public class SaveUserRequestDto {
     @Pattern(regexp = "^(?=.*[&#!%])(?=.*\\d).*$", message = "Password must contain a special character and a digit")
     private String password;
 
-    @NotNull(message = "Email needs to be provided")
-    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Invalid email format")
-    private String email;
-
     @NotNull(message = "First name needs to be provided")
     @Pattern(regexp = "^[^A-Za-z]*[A-Za-z].*$", message = "First name must contain at least one English letter")
     private String firstName;
@@ -39,7 +35,7 @@ public class SaveUserRequestDto {
     private String lastName;
 
     @NotNull(message = "Date of birth needs to be provided")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @NotNull(message = "Phone number needs to be provided")
     @Pattern(regexp = "^[0-9]*$", message = "Phone number must contain only digits")

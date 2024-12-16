@@ -2,20 +2,19 @@ package com.room8.backend.controllers;
 
 import com.room8.backend.dtos.LoginUserRequestDto;
 import com.room8.backend.dtos.SaveUserRequestDto;
+import com.room8.backend.dtos.UserResponseDto;
 import com.room8.backend.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
 
@@ -34,6 +33,11 @@ public class UserController {
     @PostMapping("/logout")
     public void logoutUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         userService.logoutUser(authentication, request, response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDto> getUser() {
+        return ResponseEntity.ok(userService.getUser());
     }
 
 }
