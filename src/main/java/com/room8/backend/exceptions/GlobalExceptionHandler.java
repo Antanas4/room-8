@@ -1,4 +1,4 @@
-package com.room8.backend.exception;
+package com.room8.backend.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
