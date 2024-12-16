@@ -1,4 +1,4 @@
-package com.room8.backend.Entities;
+package com.room8.backend.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

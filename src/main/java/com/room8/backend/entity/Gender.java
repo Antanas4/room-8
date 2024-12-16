@@ -1,4 +1,4 @@
-package com.room8.backend.Entities;
+package com.room8.backend.entity;
 
 public enum Gender {
     MALE, FEMALE
