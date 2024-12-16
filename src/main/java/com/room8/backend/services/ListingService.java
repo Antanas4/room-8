@@ -7,6 +7,7 @@ import com.room8.backend.repositories.ListingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,11 +15,17 @@ import java.util.List;
 public class ListingService {
 
     private final ListingRepository listingRepository;
+    private final SessionService sessionService;
 
     public void addListing(ListingRequest listingRequest) {
+        var user = sessionService.getUserFromSessionId()
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
         var listing = Listing.builder()
                 .title(listingRequest.getTitle())
                 .text(listingRequest.getText())
+                .user(user)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         listingRepository.save(listing);

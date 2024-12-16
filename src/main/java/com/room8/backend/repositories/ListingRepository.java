@@ -12,7 +12,7 @@ import java.util.List;
 public interface ListingRepository extends JpaRepository<Listing, Long> {
 
     @Query("""
-            SELECT new com.room8.backend.dto.ListingResponse(l.title, l.text, u.username, l.createdAt) 
+            SELECT new com.room8.backend.dtos.ListingResponse(l.title, l.text, u.username, l.createdAt) 
             FROM Listing l 
             JOIN l.user u
             ON l.user.id = u.id
