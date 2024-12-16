@@ -1,6 +1,5 @@
-package com.room8.backend.entity;
+package com.room8.backend.entities;
 
-import jakarta.annotation.security.DenyAll;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

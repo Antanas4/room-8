@@ -1,9 +1,9 @@
-package com.room8.backend.service;
+package com.room8.backend.services;
 
-import com.room8.backend.dto.ListingRequest;
-import com.room8.backend.dto.ListingResponse;
-import com.room8.backend.entity.Listing;
-import com.room8.backend.repository.ListingRepository;
+import com.room8.backend.dtos.ListingRequest;
+import com.room8.backend.dtos.ListingResponse;
+import com.room8.backend.entities.Listing;
+import com.room8.backend.repositories.ListingRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

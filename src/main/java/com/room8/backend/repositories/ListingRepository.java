@@ -1,7 +1,7 @@
-package com.room8.backend.repository;
+package com.room8.backend.repositories;
 
-import com.room8.backend.dto.ListingResponse;
-import com.room8.backend.entity.Listing;
+import com.room8.backend.dtos.ListingResponse;
+import com.room8.backend.entities.Listing;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

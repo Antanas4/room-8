@@ -1,4 +1,4 @@
-package com.room8.backend.dto;
+package com.room8.backend.dtos;
 
 import lombok.Data;
 

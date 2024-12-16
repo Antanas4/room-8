@@ -1,8 +1,8 @@
-package com.room8.backend.controller;
+package com.room8.backend.controllers;
 
-import com.room8.backend.dto.ListingRequest;
-import com.room8.backend.dto.ListingResponse;
-import com.room8.backend.service.ListingService;
+import com.room8.backend.dtos.ListingRequest;
+import com.room8.backend.dtos.ListingResponse;
+import com.room8.backend.services.ListingService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
