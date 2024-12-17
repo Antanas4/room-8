@@ -18,13 +18,13 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final ChatRepository chatRepository;
+    private final SessionService sessionService;
 
     public void sendMessage(MessageRequestDto messageRequestDto) {
+        User sender = sessionService.getUserFromSessionId()
+                .orElseThrow(() -> new RuntimeException("Session not found"));
         User receiver = userRepository.findById(messageRequestDto.getReceiverId())
                 .orElseThrow(() -> new IllegalArgumentException("Receiver not found with ID: " + messageRequestDto.getReceiverId()));
-
-        User sender = userRepository.findById(messageRequestDto.getSenderId())
-                .orElseThrow(() -> new IllegalArgumentException("Sender not found with ID: " + messageRequestDto.getSenderId()));
         Chat chat = chatRepository.findById(messageRequestDto.getChatRoomId())
                 .orElseThrow(() -> new IllegalArgumentException("Chat not found with ID: " + messageRequestDto.getChatRoomId()));
 

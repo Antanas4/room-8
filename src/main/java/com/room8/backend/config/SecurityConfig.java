@@ -23,7 +23,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "api/users/login",
                                 "api/users/register",
-                                "api/users/logout"
+                                "api/users/logout",
+                                "api/message/sendMessage"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

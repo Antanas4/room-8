@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import { useRouter } from "expo-router";
 
 interface Chat {
     id: string;
@@ -10,10 +11,11 @@ interface Chat {
 const ChatsScreen = () => {
     const [chats, setChats] = useState<Chat[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         axios.get('http://localhost:8080/api/chat/getUsersChats', {
-            withCredentials:true
+            withCredentials: true
         })
             .then((response) => {
                 setChats(response.data);
@@ -33,6 +35,7 @@ const ChatsScreen = () => {
         );
     }
 
+    // @ts-ignore
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Chats</Text>
@@ -45,8 +48,11 @@ const ChatsScreen = () => {
                         <Text style={styles.chatName}>
                             Chat with {chat.recipientId}
                         </Text>
-                        <TouchableOpacity style={styles.messageButton}>
-                            <Text style={styles.messageButtonText}>View</Text>
+                        <TouchableOpacity
+                            style={styles.messageButton}
+                            onPress={() => router.push(`/chatRoom?id=${chat.id}&recipientId=${chat.recipientId}`)}
+                        >
+                            <Text style={styles.messageButtonText} >Chat</Text>
                         </TouchableOpacity>
                     </View>
                 ))
