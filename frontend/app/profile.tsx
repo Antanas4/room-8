@@ -11,17 +11,20 @@ import {
     Image
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import {useAuth} from "@/components/AuthContext";
 
 const ProfileScreen = () => {
+    const { user } = useAuth();
+    console.log(user);
+
     const [isPersonalModalVisible, setPersonalModalVisible] = useState(false);
     const [isPaymentModalVisible, setPaymentModalVisible] = useState(false);
     const [isNotificationsModalVisible, setNotificationsModalVisible] = useState(false);
 
-    const [personalInfo, setPersonalInfo] = useState({ email: '', phone: '', password: '' });
+    const [personalInfo, setPersonalInfo] = useState({ username: user.username });
     const [paymentInfo, setPaymentInfo] = useState({ cardType: '', cardNumber: '', expiryDate: '', cvv: '' });
     const [notifications, setNotifications] = useState({ email: false, push: false });
 
-    // Handle modal toggling
     const handleEdit = (section, value) => {
         if (section === 'personal') setPersonalInfo(value);
         else if (section === 'payment') setPaymentInfo(value);
@@ -40,7 +43,7 @@ const ProfileScreen = () => {
                         source={{ uri: 'https://via.placeholder.com/150' }} // Placeholder image
                         style={styles.profilePicture}
                     />
-                    <Text style={styles.profileName}>Gustas Antanas</Text>
+                    <Text style={styles.profileName}>{user.firstName} {user.lastName}</Text>
                 </View>
 
                 {/* Buttons for Each Section */}
@@ -76,22 +79,10 @@ const ProfileScreen = () => {
                         <Text style={styles.modalTitle}>Edit Personal Information</Text>
                         <TextInput
                             style={styles.modalInput}
-                            placeholder="Email"
-                            value={personalInfo.email}
-                            onChangeText={(text) => setPersonalInfo({ ...personalInfo, email: text })}
-                        />
-                        <TextInput
-                            style={styles.modalInput}
-                            placeholder="Phone"
-                            value={personalInfo.phone}
-                            onChangeText={(text) => setPersonalInfo({ ...personalInfo, phone: text })}
-                        />
-                        <TextInput
-                            style={styles.modalInput}
-                            placeholder="New Password"
-                            secureTextEntry
-                            value={personalInfo.password}
-                            onChangeText={(text) => setPersonalInfo({ ...personalInfo, password: text })}
+                            placeholder="Username"
+                            placeholderTextColor='#D9DBE9'
+                            value={personalInfo.username}
+                            onChangeText={(text) => setPersonalInfo({ ...personalInfo, username: text })}
                         />
                         <TouchableOpacity
                             style={styles.saveButton}

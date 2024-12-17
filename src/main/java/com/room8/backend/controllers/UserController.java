@@ -26,18 +26,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public void loginUser(@Valid @RequestBody LoginUserRequestDto loginUserRequestDto, HttpSession session) {
-        userService.loginUser(loginUserRequestDto, session);
+    public UserResponseDto loginUser(@Valid @RequestBody LoginUserRequestDto loginUserRequestDto, HttpSession session) {
+        return userService.loginUser(loginUserRequestDto, session);
     }
 
     @PostMapping("/logout")
     public void logoutUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         userService.logoutUser(authentication, request, response);
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<UserResponseDto> getUser() {
-        return ResponseEntity.ok(userService.getUser());
     }
 
 }

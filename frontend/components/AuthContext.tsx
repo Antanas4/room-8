@@ -18,21 +18,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    useEffect(() => {
-        const checkSession = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/api/users/me', { withCredentials: true });
-                setUser(response.data);
-            } catch (err) {
-                setUser(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        checkSession();
-    }, []);
-
     const signup = async (firstName: string, lastName: string, phoneNumber: string, username: string,
                           password: string, dateOfBirth: string, gender: string) => {
         try {
@@ -50,12 +35,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (username: string, password: string) => {
         try {
-            await axios.post(
+            const response = await axios.post(
                 'http://localhost:8080/api/users/login',
                 { username, password },
                 { withCredentials: true }
             );
-
+            setUser(response.data);
             router.push('/main');
         } catch (error) {
             console.error('Login failed:', error);
@@ -65,13 +50,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = async () => {
         try {
-            await axios.post('http://localhost:8080/api/users/logout', {}, { withCredentials: true });
-            setUser(null); // Clear user data
+            await axios.post(
+                'http://localhost:8080/api/users/logout', // API endpoint
+                {}, // Empty body (if no payload is required for logout)
+                {
+                    withCredentials: true, // Include cookies in the request
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+            setUser(null); // Reset the user state
             router.push('/login'); // Navigate back to login screen
         } catch (error) {
             console.error('Logout failed:', error);
         }
     };
+
 
     return (
         <AuthContext.Provider value={{ user, signup, login, logout, loading }}>

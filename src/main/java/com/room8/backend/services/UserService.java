@@ -48,7 +48,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void loginUser(LoginUserRequestDto loginUserRequestDto, HttpSession session) {
+    public UserResponseDto loginUser(LoginUserRequestDto loginUserRequestDto, HttpSession session) {
         User user = userRepository.findByUsername(loginUserRequestDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Username"));
 
@@ -61,6 +61,17 @@ public class UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .dateOfBirth(user.getDateOfBirth())
+                .phoneNumber(user.getPhoneNumber())
+                .gender(user.getGender())
+                .build();
+
     }
 
     private static Authentication getAuthentication(User user, Authentication existingAuth) {
@@ -79,20 +90,6 @@ public class UserService {
     public void logoutUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, authentication);
-    }
-
-    public UserResponseDto getUser(){
-        var user = sessionService.getUserFromSessionId()
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        return UserResponseDto.builder()
-                .username(user.getUsername())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .dateOfBirth(user.getDateOfBirth())
-                .phoneNumber(user.getPhoneNumber())
-                .gender(user.getGender())
-                .build();
     }
 
 }
