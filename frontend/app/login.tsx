@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
 import BackButton from '../components/BackButton';
-import axios from 'axios';
+import {useAuth} from "@/components/AuthContext";
 
 export default function LoginScreen() {
+    const { login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const router = useRouter();
+    const [error, setError] = useState<string | null>(null);
 
     const handleLogin = async () => {
+        setError(null); // Clear previous errors
         try {
-            await axios.post('http://localhost:8080/api/users/login', {
-                username,
-                password,
-            });
-
-            router.push('/main');
-        } catch (e) {
-            console.error(e);
+            await login(username, password);
+        } catch (err) {
+            setError('Invalid username or password');
         }
     };
 
@@ -27,6 +23,8 @@ export default function LoginScreen() {
             <BackButton />
 
             <Text style={styles.title}>ROOM8</Text>
+
+            {error && <Text style={styles.error}>{error}</Text>}
 
             <View style={styles.inputContainer}>
                 <TextInput
@@ -71,6 +69,10 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#48AABA',
         marginBottom: 40,
+    },
+    error: {
+        color: 'red',
+        marginBottom: 10,
     },
     inputContainer: {
         width: 300,
