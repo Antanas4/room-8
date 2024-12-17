@@ -4,6 +4,7 @@ import com.room8.backend.dtos.ListingResponse;
 import com.room8.backend.entities.Listing;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,4 +20,7 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
             ORDER BY l.createdAt ASC
             """)
     List<ListingResponse> getAllListings();
+
+    @Query("SELECT l FROM Listing l WHERE l.title LIKE %:search%")
+    List<Listing> findListingByTitle(@Param("search") String search);
 }

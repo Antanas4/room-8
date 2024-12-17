@@ -7,11 +7,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/listing")
+@RequestMapping("/api/listing")
 @AllArgsConstructor
 public class ListingController {
 
@@ -26,5 +25,10 @@ public class ListingController {
     @GetMapping("/all")
     public ResponseEntity<List<ListingResponse>> getAllListings() {
         return ResponseEntity.status(HttpStatus.OK).body(listingService.getAllListings());
+    }
+
+    @GetMapping("/{search}")
+    public ResponseEntity<List<ListingResponse>> searchListings(@PathVariable String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(listingService.searchListings(search));
     }
 }

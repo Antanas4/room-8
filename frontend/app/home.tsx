@@ -1,24 +1,38 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, ScrollView, StyleSheet } from 'react-native';
+import axios from 'axios';
 import ProfileCard from '../components/ProfileCard';
 import SearchBar from '../components/SearchBar';
 
 export default function HomeScreen() {
-    const [isFilterVisible, setIsFilterVisible] = useState(false);
     const [searchText, setSearchText] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [listings, setListings] = useState([]);
+    const [loading, setLoading] = useState(false); // Track loading state
 
-    const toggleFilter = () => {
-        setIsFilterVisible(!isFilterVisible);
+    useEffect(() => {
+        // Fetch all listings initially when the component mounts
+        fetchListings();
+    }, []);
+
+    const fetchListings = async (searchQuery = '') => {
+        try {
+            setLoading(true);
+            const url = searchQuery
+                ? `http://localhost:8080/api/listing/${searchQuery}`  // Fetch search results
+                : 'http://localhost:8080/api/listing/all';            // Fetch all listings
+            const response = await axios.get(url, { withCredentials: true });
+            setListings(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching listings:', error);
+            setLoading(false);
+        }
     };
-
-    const filterOptions = [
-        'City',
-        'Gender',
-    ];
 
     const handleSearchClick = () => {
         console.log('Searching for:', searchText);
+        fetchListings(searchText);  // Fetch filtered listings based on search text
     };
 
     const toggleModal = () => {
@@ -27,52 +41,38 @@ export default function HomeScreen() {
 
     return (
         <View style={{ flex: 1 }}>
+            {/* Header */}
             <View style={styles.headerContainer}>
                 <Text style={styles.title}>ROOM8</Text>
             </View>
 
+            {/* Search Bar */}
             <SearchBar
                 searchText={searchText}
                 setSearchText={setSearchText}
                 handleSearchClick={handleSearchClick}
-                toggleFilter={toggleFilter}
             />
 
-            {isFilterVisible && (
-                <View style={styles.filterOptionsContainer}>
-                    <FlatList
-                        data={filterOptions}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity style={styles.filterOption}>
-                                <Text style={styles.filterText}>{item}</Text>
-                            </TouchableOpacity>
-                        )}
-                        keyExtractor={(item, index) => index.toString()}
-                    />
-                </View>
-            )}
-
+            {/* Listings */}
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <ProfileCard
-                    name="Gustas Antanas"
-                    title="Ieškau kambarioko Vilniuje"
-                    description="Aš esu 3 kurso studentas, norėčiau susirasti kambarioką Vilniuje."
-                    onMessageClick={toggleModal}
-                />
-                <ProfileCard
-                    name="Angelina Jolie"
-                    title="Ieškau kambarioko Vilniuje"
-                    description="Aš esu 3 kurso studentas, norėčiau susirasti kambarioką Vilniuje."
-                    onMessageClick={toggleModal}
-                />
-                <ProfileCard
-                    name="Tyrion Lannister"
-                    title="Ieškau kambarioko Vilniuje"
-                    description="Aš esu 3 kurso studentas, norėčiau susirasti kambarioką Vilniuje."
-                    onMessageClick={toggleModal}
-                />
+                {loading ? (
+                    <Text>Loading...</Text>
+                ) : listings.length > 0 ? (
+                    listings.map((item, index) => (
+                        <ProfileCard
+                            key={index}
+                            name={item.username}
+                            title={item.title}
+                            description={item.text}
+                            onMessageClick={toggleModal}
+                        />
+                    ))
+                ) : (
+                    <Text style={styles.noListingsText}>No listings available</Text>
+                )}
             </ScrollView>
 
+            {/* Modal */}
             {isModalVisible && (
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
@@ -80,16 +80,10 @@ export default function HomeScreen() {
                             For just €0.99, you can unlock this user’s details. Want to continue?
                         </Text>
                         <View style={styles.modalButtonsContainer}>
-                            <TouchableOpacity
-                                style={styles.cancelButton}
-                                onPress={toggleModal}
-                            >
+                            <TouchableOpacity style={styles.cancelButton} onPress={toggleModal}>
                                 <Text style={styles.buttonText}>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.unlockButton}
-                                onPress={toggleModal}
-                            >
+                            <TouchableOpacity style={styles.unlockButton} onPress={toggleModal}>
                                 <Text style={styles.buttonText}>Unlock</Text>
                             </TouchableOpacity>
                         </View>
@@ -112,18 +106,6 @@ const styles = StyleSheet.create({
         fontSize: 32,
         fontWeight: 'bold',
         color: '#48AABA',
-    },
-    filterOptionsContainer: {
-        backgroundColor: '#f9f9f9',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-    },
-    filterOption: {
-        paddingVertical: 10,
-    },
-    filterText: {
-        fontSize: 16,
-        color: '#333',
     },
     scrollContainer: {
         flexGrow: 1,
@@ -174,5 +156,9 @@ const styles = StyleSheet.create({
     buttonText: {
         color: 'white',
         fontSize: 16,
+    },
+    noListingsText: {
+        textAlign: 'center',
+        marginTop: 20,
     },
 });

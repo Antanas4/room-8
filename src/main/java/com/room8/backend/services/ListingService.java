@@ -34,4 +34,18 @@ public class ListingService {
     public List<ListingResponse> getAllListings() {
         return listingRepository.getAllListings();
     }
+
+    public List<ListingResponse> searchListings(String search) {
+        List<Listing> listingsBySearch = listingRepository.findListingByTitle(search);
+
+        return listingsBySearch.stream()
+                .map(listing -> new ListingResponse(
+                        listing.getTitle(),
+                        listing.getText(),
+                        listing.getUser().getUsername(),
+                        listing.getCreatedAt()
+                ))
+                .toList();
+    }
+
 }
