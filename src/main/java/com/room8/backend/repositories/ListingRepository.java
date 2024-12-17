@@ -5,7 +5,6 @@ import com.room8.backend.entities.Listing;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -19,4 +18,6 @@ public interface ListingRepository extends JpaRepository<Listing, Long> {
             ORDER BY l.createdAt ASC
             """)
     List<ListingResponse> getAllListings();
+
+    Listing findById(long id);
 }
