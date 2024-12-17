@@ -10,11 +10,11 @@ export default function LoginScreen() {
     const [error, setError] = useState<string | null>(null);
 
     const handleLogin = async () => {
-        setError(null); // Clear previous errors
+        setError(null);
         try {
             await login(username, password);
         } catch (err) {
-            setError('Invalid username or password');
+            setError('Invalid username or password or something went wrong');
         }
     };
 

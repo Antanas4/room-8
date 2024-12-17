@@ -5,43 +5,33 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import {Picker} from "@react-native-picker/picker";
+import {useAuth} from "@/components/AuthContext";
 
 export default function RegisterScreen() {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [phone, setPhone] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [birthdate, setBirthdate] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
     const [gender, setGender] = useState('');
+    const { signup } = useAuth();
+    const [error, setError] = useState<string | null>(null);
 
     const handleLoginRedirect = () => {
         router.push('/login');
     };
 
     const handleSignUp = async () => {
-        console.log(username);
-        console.log(password);
-        console.log(firstName);
-        console.log(lastName);
-        console.log(birthdate);
-        console.log(phone);
-        console.log(gender);
+        setError(null);
         try {
-            await axios.post('http://localhost:8080/api/users/register', {
-                username,
-                password,
-                firstName,
-                lastName,
-                birthdate,
-                phone,
-                gender
-            });
-
-            router.push('/main');
+            console.log('Sending data:', { firstName, lastName, phoneNumber, username, password, dateOfBirth, gender });
+            await signup(firstName, lastName, phoneNumber, username,
+                password, dateOfBirth, gender);
         } catch (e) {
-            console.error(e);
+            setError('Something went wrong');
         }
+
     }
 
     return (
@@ -54,6 +44,8 @@ export default function RegisterScreen() {
                     <BackButton />
 
                     <Text style={styles.title}>ROOM8</Text>
+
+                    {error && <Text style={styles.error}>{error}</Text>}
 
                     <View style={styles.form}>
                         <View style={styles.inputContainer}>
@@ -81,8 +73,8 @@ export default function RegisterScreen() {
                                 style={styles.input}
                                 placeholder="Phone Number"
                                 placeholderTextColor="#A0A3BD"
-                                value={phone}
-                                onChangeText={setPhone}
+                                value={phoneNumber}
+                                onChangeText={setPhoneNumber}
                                 keyboardType="phone-pad"
                             />
                         </View>
@@ -114,8 +106,8 @@ export default function RegisterScreen() {
                                 style={styles.input}
                                 placeholder="Birthdate (MM/DD/YYYY)"
                                 placeholderTextColor="#A0A3BD"
-                                value={birthdate}
-                                onChangeText={setBirthdate}
+                                value={dateOfBirth}
+                                onChangeText={setDateOfBirth}
                                 keyboardType="numeric"
                             />
                         </View>
@@ -196,6 +188,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: '500',
+    },
+    error: {
+        color: 'red',
+        marginBottom: 10,
     },
     loginLink: {
         fontSize: 14,

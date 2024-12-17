@@ -1,6 +1,8 @@
 package com.room8.backend.dtos;
 
 import com.room8.backend.entities.Gender;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -42,6 +44,7 @@ public class SaveUserRequestDto {
     private String phoneNumber;
 
     @NotNull(message = "Gender needs to be provided")
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
 }
