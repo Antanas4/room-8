@@ -1,23 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+
+interface Chat {
+    id: string;
+    recipientId: number;
+}
 
 const ChatsScreen = () => {
+    const [chats, setChats] = useState<Chat[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/chat/getUsersChats', {
+            withCredentials:true
+        })
+            .then((response) => {
+                setChats(response.data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("There was an error fetching the chats!", error);
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text>Loading chats...</Text>
+            </View>
+        );
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Chats</Text>
 
-            {/* Example chat items */}
-            {Array.from({ length: 10 }, (_, i) => (
-                <View key={i} style={styles.chatCard}>
-                    <Text style={styles.chatName}>Chat {i + 1}</Text>
-                    <Text style={styles.chatDescription}>
-                        This is a description of chat {i + 1}. You can add more details here.
-                    </Text>
-                    <TouchableOpacity style={styles.messageButton}>
-                        <Text style={styles.messageButtonText}>View</Text>
-                    </TouchableOpacity>
-                </View>
-            ))}
+            {chats.length === 0 ? (
+                <Text style={styles.noChats}>No chats available.</Text>
+            ) : (
+                chats.map((chat) => (
+                    <View key={chat.id} style={styles.chatCard}>
+                        <Text style={styles.chatName}>
+                            Chat with {chat.recipientId}
+                        </Text>
+                        <TouchableOpacity style={styles.messageButton}>
+                            <Text style={styles.messageButtonText}>View</Text>
+                        </TouchableOpacity>
+                    </View>
+                ))
+            )}
         </ScrollView>
     );
 };
@@ -65,6 +98,16 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: '500',
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    noChats: {
+        fontSize: 16,
+        color: '#666',
+        textAlign: 'center',
     },
 });
 

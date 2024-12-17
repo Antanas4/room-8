@@ -34,5 +34,4 @@ public class UserController {
     public void logoutUser(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
         userService.logoutUser(authentication, request, response);
     }
-
 }
